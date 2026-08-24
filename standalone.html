@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Structured Use Case Editor</title>
+    <link id="appStylesheet" rel="stylesheet" href="src/styles.css?v=20260625-ucse-12" />
+    <style>
+      .selectedUseCaseOval {
+        cursor: pointer;
+      }
+
+      .miniIcon {
+        width: 17px;
+        height: 17px;
+        display: inline-block;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      const buildToken = `20260625-ucse-12-${Date.now()}`;
+      document.getElementById("appStylesheet").href = `src/styles.css?v=${buildToken}`;
+      import(`./src/main.js?v=${buildToken}`);
+    </script>
+  </body>
+</html>

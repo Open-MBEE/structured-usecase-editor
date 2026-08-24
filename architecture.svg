@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="930" viewBox="0 0 1500 930" role="img" aria-labelledby="title desc">
+  <title id="title">Structured Use Case Editor architecture</title>
+  <desc id="desc">UML-style architecture diagram showing source modules for the Structured Use Case Editor.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#263241"/>
+    </marker>
+    <style>
+      .title { font: 700 30px Arial, sans-serif; fill: #121820; }
+      .subtitle { font: 16px Arial, sans-serif; fill: #56657a; }
+      .box { stroke: #263241; stroke-width: 2; rx: 8; ry: 8; }
+      .head { font: 700 18px Arial, sans-serif; fill: #111827; }
+      .stereo { font: 13px Arial, sans-serif; fill: #475569; }
+      .item { font: 14px Arial, sans-serif; fill: #111827; }
+      .line { stroke: #263241; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+      .dash { stroke-dasharray: 8 6; }
+      .note { font: 13px Arial, sans-serif; fill: #334155; }
+    </style>
+  </defs>
+
+  <rect width="1500" height="930" fill="#f8fafc"/>
+  <text x="750" y="42" text-anchor="middle" class="title">Structured Use Case Editor - Source Architecture</text>
+  <text x="750" y="68" text-anchor="middle" class="subtitle">Native ES module organization for the running standalone editor</text>
+
+  <g id="app-controller">
+    <rect x="40" y="110" width="310" height="160" fill="#e8f5e9" class="box"/>
+    <line x1="40" y1="154" x2="350" y2="154" stroke="#263241" stroke-width="1.5"/>
+    <line x1="40" y1="214" x2="350" y2="214" stroke="#263241" stroke-width="1.5"/>
+    <text x="195" y="137" text-anchor="middle" class="head">App / UI Layer</text>
+    <text x="195" y="173" text-anchor="middle" class="stereo">src/main.js, src/ui/*</text>
+    <text x="62" y="238" class="item">+ render()</text>
+    <text x="62" y="258" class="item">+ bindEvents()</text>
+  </g>
+
+  <g id="model">
+    <rect x="430" y="100" width="360" height="190" fill="#e0f2fe" class="box"/>
+    <line x1="430" y1="144" x2="790" y2="144" stroke="#263241" stroke-width="1.5"/>
+    <line x1="430" y1="222" x2="790" y2="222" stroke="#263241" stroke-width="1.5"/>
+    <text x="610" y="127" text-anchor="middle" class="head">Model Layer</text>
+    <text x="610" y="164" text-anchor="middle" class="stereo">src/model/*</text>
+    <text x="452" y="188" class="item">- ProjectModel</text>
+    <text x="452" y="208" class="item">- UseCase, Actor, Relationship</text>
+    <text x="452" y="246" class="item">+ createBlankProjectModel()</text>
+    <text x="452" y="266" class="item">+ normalizeUseCaseModel()</text>
+  </g>
+
+  <g id="diagram">
+    <rect x="880" y="100" width="300" height="190" fill="#fef3c7" class="box"/>
+    <line x1="880" y1="144" x2="1180" y2="144" stroke="#263241" stroke-width="1.5"/>
+    <line x1="880" y1="222" x2="1180" y2="222" stroke="#263241" stroke-width="1.5"/>
+    <text x="1030" y="127" text-anchor="middle" class="head">Diagram Layer</text>
+    <text x="1030" y="164" text-anchor="middle" class="stereo">src/diagram/*</text>
+    <text x="902" y="188" class="item">- geometry</text>
+    <text x="902" y="208" class="item">- node and edge rendering</text>
+    <text x="902" y="246" class="item">+ renderDiagram()</text>
+    <text x="902" y="266" class="item">+ installDiagramDragHandlers()</text>
+  </g>
+
+  <g id="specification">
+    <rect x="1200" y="100" width="260" height="190" fill="#dcfce7" class="box"/>
+    <line x1="1200" y1="144" x2="1460" y2="144" stroke="#263241" stroke-width="1.5"/>
+    <line x1="1200" y1="222" x2="1460" y2="222" stroke="#263241" stroke-width="1.5"/>
+    <text x="1330" y="127" text-anchor="middle" class="head">Specification Layer</text>
+    <text x="1330" y="164" text-anchor="middle" class="stereo">src/specification/*</text>
+    <text x="1222" y="188" class="item">- scenario editor UI</text>
+    <text x="1222" y="208" class="item">- inspector panels</text>
+    <text x="1222" y="246" class="item">+ renderEditorColumn()</text>
+  </g>
+
+  <g id="serializers">
+    <rect x="250" y="390" width="330" height="190" fill="#f3e8ff" class="box"/>
+    <line x1="250" y1="434" x2="580" y2="434" stroke="#263241" stroke-width="1.5"/>
+    <line x1="250" y1="512" x2="580" y2="512" stroke="#263241" stroke-width="1.5"/>
+    <text x="415" y="417" text-anchor="middle" class="head">Serialization Layer</text>
+    <text x="415" y="454" text-anchor="middle" class="stereo">src/serializers/*</text>
+    <text x="272" y="478" class="item">- JSON view</text>
+    <text x="272" y="498" class="item">- document view</text>
+    <text x="272" y="536" class="item">+ serializeDiagramJson()</text>
+    <text x="272" y="556" class="item">+ serializeUseCaseDsl()</text>
+  </g>
+
+  <g id="storage">
+    <rect x="660" y="390" width="260" height="190" fill="#fee2e2" class="box"/>
+    <line x1="660" y1="434" x2="920" y2="434" stroke="#263241" stroke-width="1.5"/>
+    <line x1="660" y1="512" x2="920" y2="512" stroke="#263241" stroke-width="1.5"/>
+    <text x="790" y="417" text-anchor="middle" class="head">Storage Layer</text>
+    <text x="790" y="454" text-anchor="middle" class="stereo">src/storage/*</text>
+    <text x="682" y="478" class="item">- structuredUseCaseProjectModel</text>
+    <text x="682" y="536" class="item">+ saveProjectSnapshot()</text>
+    <text x="682" y="556" class="item">+ loadProjectSnapshot()</text>
+  </g>
+
+  <g id="textual">
+    <rect x="1000" y="390" width="300" height="190" fill="#e0e7ff" class="box"/>
+    <line x1="1000" y1="434" x2="1300" y2="434" stroke="#263241" stroke-width="1.5"/>
+    <line x1="1000" y1="512" x2="1300" y2="512" stroke="#263241" stroke-width="1.5"/>
+    <text x="1150" y="417" text-anchor="middle" class="head">Textual View Layer</text>
+    <text x="1150" y="454" text-anchor="middle" class="stereo">src/textual/*</text>
+    <text x="1022" y="478" class="item">- JSON tab rendering</text>
+    <text x="1022" y="498" class="item">- UCML tab rendering</text>
+    <text x="1022" y="536" class="item">+ renderTextualWorkspace()</text>
+  </g>
+
+  <g id="legacy">
+    <rect x="485" y="710" width="530" height="120" fill="#f1f5f9" class="box"/>
+    <line x1="485" y1="754" x2="1015" y2="754" stroke="#263241" stroke-width="1.5"/>
+    <text x="750" y="737" text-anchor="middle" class="head">Legacy Runtime Reference</text>
+    <text x="750" y="782" text-anchor="middle" class="stereo">legacy/standalone-app.js</text>
+    <text x="510" y="812" class="note">Preserved for one release as the behavior baseline while modules are reviewed.</text>
+  </g>
+
+  <path d="M350 190 L430 190" class="line"/>
+  <path d="M790 190 L880 190" class="line"/>
+  <path d="M1180 190 L1200 190" class="line"/>
+  <path d="M610 290 L455 390" class="line"/>
+  <path d="M610 290 L770 390" class="line"/>
+  <path d="M1030 290 L900 390" class="line"/>
+  <path d="M1330 290 L1180 390" class="line"/>
+  <path d="M750 710 L750 585" class="line dash"/>
+
+  <text x="46" y="875" class="note">Note: standalone.html loads src/main.js as the active runtime entry point.</text>
+  <text x="46" y="897" class="note">legacy/standalone-app.js is retained for one release as the behavior baseline.</text>
+</svg>
