@@ -15,6 +15,8 @@ implemented with static HTML, JavaScript, and CSS. A small
 cPanel/Passenger Python deployment example is included, but it is not
 required to run or host the editor.
 
+![Structured Use Case Editor](images/structured-use-case-editor.png)
+
 ## Companion Project
 
 The **Structured Use Case Editor** provides an open-source reference
