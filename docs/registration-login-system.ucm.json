@@ -1,0 +1,367 @@
+{
+  "metaclass": "UseCaseModel",
+  "id": "model-registration-login-system",
+  "name": "RegistrationLoginSystemModel",
+  "nextNodeNumber": 6,
+  "nextEdgeNumber": 6,
+  "selectedNodeId": "uc-register",
+  "selectedEdgeId": "",
+  "paletteTool": "select",
+  "connectKind": "",
+  "connectSourceId": "",
+  "actors": [
+    {
+      "id": "actor-user",
+      "name": "User",
+      "layout": {
+        "x": 70,
+        "y": 250,
+        "width": 74,
+        "height": 116
+      }
+    }
+  ],
+  "useCases": [
+    {
+      "id": "uc-register",
+      "name": "Register Account",
+      "layout": {
+        "x": 260,
+        "y": 115,
+        "width": 230,
+        "height": 82
+      },
+      "specification": {
+        "name": "Register Account",
+        "preconditions": [
+          "User is not currently signed in.",
+          "Registration service is available."
+        ],
+        "requirements": [
+          "REQ-AUTH-01: The system shall allow a new user to create an account with a unique email address.",
+          "REQ-AUTH-02: The system shall verify ownership of the email address before activating the account.",
+          "REQ-AUTH-03: The system shall enforce password strength rules during registration."
+        ],
+        "relatedTestCases": [
+          "TC-AUTH-REG-01",
+          "TC-AUTH-REG-02",
+          "TC-AUTH-REG-03"
+        ],
+        "scenarios": [
+          {
+            "id": "N",
+            "type": "nominal",
+            "postcondition": [
+              "User account is created, email ownership is verified, and the account is ready for login."
+            ],
+            "steps": [
+              { "number": 1, "text": "User opens the registration form." },
+              { "number": 2, "text": "System prompts for name, email address, and password." },
+              { "number": 3, "text": "User enters registration information." },
+              { "number": 4, "text": "System validates the email address format and password strength." },
+              { "number": 5, "text": "System checks that the email address is not already registered." },
+              { "number": 6, "text": "System creates a pending account and sends an email verification link." },
+              { "number": 7, "text": "User opens the email verification link." },
+              { "number": 8, "text": "System activates the account." }
+            ]
+          },
+          {
+            "id": "4E",
+            "type": "exception",
+            "condition": "Invalid registration information",
+            "branchStep": 4,
+            "rejoinStep": 3,
+            "postcondition": [
+              "Invalid registration information is rejected and the account is not created."
+            ],
+            "steps": [
+              { "number": 1, "text": "System identifies one or more invalid registration fields." },
+              { "number": 2, "text": "System displays validation messages beside the affected fields." },
+              { "number": 3, "text": "User corrects the registration information." }
+            ]
+          },
+          {
+            "id": "5A",
+            "type": "alternate",
+            "condition": "Email address already registered",
+            "branchStep": 5,
+            "rejoinStep": 1,
+            "postcondition": [
+              "No duplicate account is created."
+            ],
+            "steps": [
+              { "number": 1, "text": "System detects that the email address already belongs to an account." },
+              { "number": 2, "text": "System offers the user the option to sign in or reset the password." },
+              { "number": 3, "text": "User chooses the next account access action." }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "uc-setup-2fa",
+      "name": "Setup Two-Factor Authentication",
+      "layout": {
+        "x": 620,
+        "y": 60,
+        "width": 300,
+        "height": 88
+      },
+      "specification": {
+        "name": "Setup Two-Factor Authentication",
+        "preconditions": [
+          "User has an active account.",
+          "User is authenticated or completing registration."
+        ],
+        "requirements": [
+          "REQ-AUTH-04: The system shall support setup of an authenticator app as a second factor.",
+          "REQ-AUTH-05: The system shall provide backup recovery codes during two-factor setup."
+        ],
+        "relatedTestCases": [
+          "TC-AUTH-2FA-01",
+          "TC-AUTH-2FA-02"
+        ],
+        "scenarios": [
+          {
+            "id": "N",
+            "type": "nominal",
+            "postcondition": [
+              "Two-factor authentication is enabled for the user's account."
+            ],
+            "steps": [
+              { "number": 1, "text": "System displays two-factor authentication setup options." },
+              { "number": 2, "text": "User selects authenticator app setup." },
+              { "number": 3, "text": "System displays a QR code and manual setup key." },
+              { "number": 4, "text": "User scans the QR code with an authenticator app." },
+              { "number": 5, "text": "User enters the current verification code." },
+              { "number": 6, "text": "System validates the verification code." },
+              { "number": 7, "text": "System generates backup recovery codes." },
+              { "number": 8, "text": "User confirms that recovery codes have been saved." }
+            ]
+          },
+          {
+            "id": "6E",
+            "type": "exception",
+            "condition": "Verification code is invalid",
+            "branchStep": 6,
+            "rejoinStep": 5,
+            "postcondition": [
+              "Two-factor authentication remains disabled until a valid code is entered."
+            ],
+            "steps": [
+              { "number": 1, "text": "System rejects the verification code." },
+              { "number": 2, "text": "System asks the user to enter a new code from the authenticator app." }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "uc-login",
+      "name": "Login",
+      "layout": {
+        "x": 285,
+        "y": 360,
+        "width": 180,
+        "height": 78
+      },
+      "specification": {
+        "name": "Login",
+        "preconditions": [
+          "User has an active account.",
+          "Authentication service is available."
+        ],
+        "requirements": [
+          "REQ-AUTH-06: The system shall authenticate registered users with email address and password.",
+          "REQ-AUTH-07: The system shall require a second factor when two-factor authentication is enabled.",
+          "REQ-AUTH-08: The system shall lock or throttle repeated failed login attempts."
+        ],
+        "relatedTestCases": [
+          "TC-AUTH-LOGIN-01",
+          "TC-AUTH-LOGIN-02",
+          "TC-AUTH-LOGIN-03"
+        ],
+        "scenarios": [
+          {
+            "id": "N",
+            "type": "nominal",
+            "postcondition": [
+              "User is authenticated and the system opens the user dashboard."
+            ],
+            "steps": [
+              { "number": 1, "text": "User opens the login form." },
+              { "number": 2, "text": "System prompts for email address and password." },
+              { "number": 3, "text": "User enters email address and password." },
+              { "number": 4, "text": "System validates the submitted credentials." },
+              { "number": 5, "text": "System determines that two-factor authentication is enabled." },
+              { "number": 6, "text": "System prompts for a two-factor verification code." },
+              { "number": 7, "text": "User enters the verification code." },
+              { "number": 8, "text": "System validates the verification code and starts an authenticated session." },
+              { "number": 9, "text": "System opens the user dashboard." }
+            ]
+          },
+          {
+            "id": "5A",
+            "type": "alternate",
+            "condition": "Two-factor authentication is not enabled",
+            "branchStep": 5,
+            "rejoinStep": 9,
+            "postcondition": [
+              "User is authenticated without a second-factor challenge."
+            ],
+            "steps": [
+              { "number": 1, "text": "System determines that the account does not require a second factor." },
+              { "number": 2, "text": "System starts an authenticated session." }
+            ]
+          },
+          {
+            "id": "4E",
+            "type": "exception",
+            "condition": "Credentials are invalid",
+            "branchStep": 4,
+            "rejoinStep": 2,
+            "postcondition": [
+              "User is not authenticated."
+            ],
+            "steps": [
+              { "number": 1, "text": "System rejects the submitted credentials." },
+              { "number": 2, "text": "System displays a generic login failure message." },
+              { "number": 3, "text": "System increments the failed-login counter for the account or client." }
+            ]
+          },
+          {
+            "id": "8E",
+            "type": "exception",
+            "condition": "Two-factor verification fails",
+            "branchStep": 8,
+            "rejoinStep": 6,
+            "postcondition": [
+              "User remains unauthenticated."
+            ],
+            "steps": [
+              { "number": 1, "text": "System rejects the submitted verification code." },
+              { "number": 2, "text": "System prompts the user to try again or use a recovery code." }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "uc-reset-password",
+      "name": "Reset Password",
+      "layout": {
+        "x": 650,
+        "y": 410,
+        "width": 230,
+        "height": 82
+      },
+      "specification": {
+        "name": "Reset Password",
+        "preconditions": [
+          "User has an existing account.",
+          "User can receive email at the account email address."
+        ],
+        "requirements": [
+          "REQ-AUTH-09: The system shall allow a user to request a password reset link.",
+          "REQ-AUTH-10: Password reset links shall expire after a limited time.",
+          "REQ-AUTH-11: The system shall require the new password to satisfy password strength rules."
+        ],
+        "relatedTestCases": [
+          "TC-AUTH-RESET-01",
+          "TC-AUTH-RESET-02"
+        ],
+        "scenarios": [
+          {
+            "id": "N",
+            "type": "nominal",
+            "postcondition": [
+              "User's password is changed and the old password can no longer be used."
+            ],
+            "steps": [
+              { "number": 1, "text": "User selects forgot password from the login form." },
+              { "number": 2, "text": "System prompts for the account email address." },
+              { "number": 3, "text": "User enters the email address." },
+              { "number": 4, "text": "System sends a password reset link if the email address belongs to an account." },
+              { "number": 5, "text": "User opens the password reset link." },
+              { "number": 6, "text": "System prompts for a new password." },
+              { "number": 7, "text": "User enters and confirms the new password." },
+              { "number": 8, "text": "System validates the reset token and new password." },
+              { "number": 9, "text": "System updates the password and invalidates the reset token." }
+            ]
+          },
+          {
+            "id": "8E",
+            "type": "exception",
+            "condition": "Reset token expired or invalid",
+            "branchStep": 8,
+            "rejoinStep": 1,
+            "postcondition": [
+              "Password is not changed."
+            ],
+            "steps": [
+              { "number": 1, "text": "System rejects the reset token." },
+              { "number": 2, "text": "System asks the user to request a new password reset link." }
+            ]
+          },
+          {
+            "id": "8A",
+            "type": "alternate",
+            "condition": "New password does not meet policy",
+            "branchStep": 8,
+            "rejoinStep": 6,
+            "postcondition": [
+              "Password remains unchanged until the user provides an acceptable password."
+            ],
+            "steps": [
+              { "number": 1, "text": "System identifies password policy violations." },
+              { "number": 2, "text": "System displays password rules that must be satisfied." },
+              { "number": 3, "text": "User enters a revised password." }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "relationships": [
+    {
+      "id": "edge-user-register",
+      "type": "association",
+      "label": "",
+      "sourceId": "actor-user",
+      "targetId": "uc-register",
+      "layout": {}
+    },
+    {
+      "id": "edge-user-login",
+      "type": "association",
+      "label": "",
+      "sourceId": "actor-user",
+      "targetId": "uc-login",
+      "layout": {}
+    },
+    {
+      "id": "edge-register-login",
+      "type": "precedes",
+      "label": "«precede»",
+      "sourceId": "uc-register",
+      "targetId": "uc-login",
+      "layout": {}
+    },
+    {
+      "id": "edge-register-2fa",
+      "type": "invoke",
+      "label": "«invoke»",
+      "sourceId": "uc-register",
+      "targetId": "uc-setup-2fa",
+      "layout": {}
+    },
+    {
+      "id": "edge-login-reset",
+      "type": "invoke",
+      "label": "«invoke»",
+      "sourceId": "uc-login",
+      "targetId": "uc-reset-password",
+      "layout": {}
+    }
+  ]
+}
