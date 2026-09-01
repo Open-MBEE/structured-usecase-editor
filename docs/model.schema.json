@@ -1,0 +1,364 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://open-mbee.github.io/structured-usecase-editor/schema/structured-use-case-model.schema.json",
+  "title": "Structured Use Case Editor Model",
+  "description": "JSON interchange format for Structured Use Case Editor .ucm.json files.",
+  "type": "object",
+  "required": [
+    "metaclass",
+    "id",
+    "name",
+    "actors",
+    "useCases",
+    "relationships"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "metaclass": {
+      "type": "string",
+      "const": "UseCaseModel"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "nextNodeNumber": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "nextEdgeNumber": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "selectedNodeId": {
+      "type": "string"
+    },
+    "selectedEdgeId": {
+      "type": "string"
+    },
+    "paletteTool": {
+      "type": "string",
+      "enum": [
+        "select",
+        "actor",
+        "usecase",
+        "association",
+        "include",
+        "extend",
+        "invoke",
+        "precedes",
+        "delete"
+      ]
+    },
+    "connectKind": {
+      "type": "string"
+    },
+    "connectSourceId": {
+      "type": "string"
+    },
+    "actors": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/actor"
+      }
+    },
+    "useCases": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/useCase"
+      }
+    },
+    "relationships": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/relationship"
+      }
+    }
+  },
+  "$defs": {
+    "layout": {
+      "type": "object",
+      "required": [
+        "x",
+        "y",
+        "width",
+        "height"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "width": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "height": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      }
+    },
+    "actor": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "layout"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "layout": {
+          "$ref": "#/$defs/layout"
+        }
+      }
+    },
+    "useCase": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "layout",
+        "specification"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "layout": {
+          "$ref": "#/$defs/layout"
+        },
+        "specification": {
+          "$ref": "#/$defs/specification"
+        }
+      }
+    },
+    "specification": {
+      "type": "object",
+      "required": [
+        "name",
+        "preconditions",
+        "requirements",
+        "relatedTestCases",
+        "scenarios"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "preconditions": {
+          "$ref": "#/$defs/stringList"
+        },
+        "requirements": {
+          "$ref": "#/$defs/stringList"
+        },
+        "relatedTestCases": {
+          "$ref": "#/$defs/stringList"
+        },
+        "scenarios": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/scenario"
+          }
+        }
+      }
+    },
+    "scenario": {
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "steps"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "nominal",
+            "alternate",
+            "exception"
+          ]
+        },
+        "condition": {
+          "type": "string"
+        },
+        "branchStep": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "rejoinStep": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "postcondition": {
+          "$ref": "#/$defs/stringList"
+        },
+        "postconditions": {
+          "$ref": "#/$defs/stringList"
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/step"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "nominal"
+              }
+            }
+          },
+          "then": {
+            "not": {
+              "required": [
+                "branchStep"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "step": {
+      "type": "object",
+      "required": [
+        "number",
+        "text"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "number": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "text": {
+          "type": "string"
+        }
+      }
+    },
+    "relationship": {
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "sourceId",
+        "targetId",
+        "layout"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "association",
+            "include",
+            "extend",
+            "invoke",
+            "precedes"
+          ]
+        },
+        "label": {
+          "type": "string"
+        },
+        "sourceId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "targetId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "layout": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "waypoints": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "x",
+                  "y"
+                ],
+                "properties": {
+                  "x": {
+                    "type": "number"
+                  },
+                  "y": {
+                    "type": "number"
+                  }
+                },
+                "additionalProperties": true
+              }
+            },
+            "labelPosition": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "x",
+                    "y"
+                  ],
+                  "properties": {
+                    "x": {
+                      "type": "number"
+                    },
+                    "y": {
+                      "type": "number"
+                    }
+                  },
+                  "additionalProperties": true
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "stringList": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}
+
